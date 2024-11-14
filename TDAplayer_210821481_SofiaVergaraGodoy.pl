@@ -3,8 +3,8 @@
 % Descripcion: Predicado que permite crear un jugador.
 % Dominio: id (int) X name (string) X color (string) X wins (int) X
 % losses (int) X draws (int) X remaining_pieces (int) X Player.
-% Estrategia: Verificación directa de condiciones (sin backtracking)
-%
+% Recorrido: player (ID, Name, Color, Wins, Losses, Draws, RemainingPieces).
+% Estrategia: Verificación sin backtracking.
 
 player(ID, Name, Color, Wins, Losses, Draws, RemainingPieces, player(ID, Name, Color, Wins, Losses, Draws, RemainingPieces)) :-
     % Verificaciones.
