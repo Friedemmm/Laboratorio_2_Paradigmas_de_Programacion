@@ -2,7 +2,6 @@
 
 % Descripcion:  Predicado para crear un tablero de Conecta4.
 % Dominio: No recibe parámetros de entrada.
-% Recorrido: board(Board).
 % Estrategia: Creación sin backtracking.
 
 % Crear una columna vacía de 6 elementos.
@@ -16,3 +15,15 @@ boardVacio(Board) :-
 % Crear el tablero.
 board(board(Board)) :-
     boardVacio(Board).
+
+%---------------OTROS-BOARD---------------%
+
+% Descripcion: Predicado que permite verificar si se puede realizar más jugadas en el tablero.
+% Dominio: board(Board).
+% Estrategia: Verificación por recorrido de lista (fila superior; primera fila).
+
+can_play(Board) :-
+    % Ver la cabeza del board; o sea, la primera fila.
+    Board = board([primeraFila|_]),
+    member(0, primeraFila).
+
