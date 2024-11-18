@@ -27,3 +27,9 @@ can_play(Board) :-
     Board = board([primeraFila|_]),
     member(0, primeraFila).
 
+
+playPiece(board(Rows), Column, Piece, board(NewRows)) :-
+    % Verifica que la columna sea válida (entre 1 y 7)
+    Column >= 1, Column =< 7,
+    % Coloca la pieza y obtiene el nuevo tablero
+    place_in_column(Rows, Column, Piece, NewRows).
