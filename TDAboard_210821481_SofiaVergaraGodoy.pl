@@ -1,4 +1,5 @@
-%---------------SELECTORES-BOARD---------------%
+%----------------------SELECTORES-BOARD-----------------------%
+
 % loQueBusco(dondeLoBusco, comoLeLlamoALoQueBusco) %
 
 getFirst([First | _], First). 
@@ -16,7 +17,7 @@ getElement(Index, [_ | Tail], Element) :-
     NextIndex is Index - 1,
     get_element_at(NextIndex, Tail, Element).
 
-%---------------CONSTRUCTOR-BOARD---------------%
+%----------------------CONSTRUCTOR-BOARD----------------------%
 
 % Descripcion:  Predicado para crear un tablero de Conecta4.
 % Dominio: No recibe parámetros de entrada.
@@ -34,7 +35,7 @@ boardVacio(Board) :-
 % Función auxiliar para crear una fila de 7 elementos.
     filaVacia([0, 0, 0, 0, 0, 0, 0]).
 
-%---------------OTROS-BOARD---------------%
+%-------------------------OTROS-BOARD-------------------------%
 
 % Descripcion: Predicado que permite verificar si se puede realizar más jugadas en el tablero.
 % Dominio: board(Board).
@@ -46,7 +47,7 @@ can_play(Board) :-
     getFirst(Board, PrimeraFila),
     member(0, PrimeraFila).
 
-%-----------------------------------------%
+%-------------------------------------------------------------%
 
 %↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓  PENDIENTE  ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 
@@ -65,20 +66,19 @@ ponerPiece(Filas, Columna, Piece, NuevasFilas) :-
     encontrarEspacio(Board, Columna, Filas),
     ...
 
+%........
 % Función auxiliar para encontrar en que fila de la columna especificada esta el primer 0.
 encontrarEspacio(Board, Columna, FilaPosicion) :-
     encontrarEspacioAux(Board, Columna, 1, FilaPosicion).
 
-% Caso base.
-encontrarEspacioAux([], _, _, _) :-
-    !, fail.
-
-% Caso recursivo
+% Caso Base.
 encontrarEspacioAux([FilaActual | RestoFilas], Columna, FilaIndex, FilaIndex) :-
     get_element_at(Columna, FilaActual, 0).
 
-% Caso recursivo: Si no hay `0` en la fila actual, pasa a la siguiente fila.
-encontrarEspacioAux([_ | RestoFilas], Columna, ..., Fila) :-
-    ..........
+% Caso recursivo: Si no hay 0 en la fila actual, pasa a la siguiente fila.
+encontrarEspacioAux([_ | RestoFilas], Columna, FilaIndex, FilaPosicion) :-
+    NextIndex is FilaIndex + 1,
+    encontrarEspacioAux(RestoFilas, Columna, NextIndex, FilaPosicion).
+%........
 
 %↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑  PENDIENTE  ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
