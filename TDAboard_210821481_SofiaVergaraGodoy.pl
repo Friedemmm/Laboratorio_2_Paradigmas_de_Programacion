@@ -73,7 +73,7 @@ encontrarEspacio(Board, Columna, FilaPosicion) :-
 
 % Caso Base.
 encontrarEspacioAux([FilaActual | RestoFilas], Columna, FilaIndex, FilaIndex) :-
-    get_element_at(Columna, FilaActual, 0).
+    get_element(FilaActual, Columna, 0).
 
 % Caso recursivo: Si no hay 0 en la fila actual, pasa a la siguiente fila.
 encontrarEspacioAux([_ | RestoFilas], Columna, FilaIndex, FilaPosicion) :-
