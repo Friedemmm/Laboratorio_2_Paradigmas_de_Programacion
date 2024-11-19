@@ -1,20 +1,38 @@
+%---------------SELECTORES-BOARD---------------%
+% loQueBusco(dondeLoBusco, comoLeLlamoALoQueBusco) %
+
+getFirst([First | _], First). 
+getSecond([_, Second | _], Second).
+getThird([_, _, Third | _], Third).
+getFourth([_, _, _, Fourth | _], Fourth).
+getFifth([_, _, _, _, Fifth | _], Fifth).
+getSixth([_, _, _, _, _, Sixth | _], Sixth).
+getSeventh([_, _, _, _, _, _, Seventh | _], Seventh).
+% Caso base.
+getElement(1, [Head | _], Head).
+% Caso recursivo.
+getElement(Index, [_ | Tail], Element) :-
+    Index > 1,
+    NextIndex is Index - 1,
+    get_element_at(NextIndex, Tail, Element).
+
 %---------------CONSTRUCTOR-BOARD---------------%
 
 % Descripcion:  Predicado para crear un tablero de Conecta4.
 % Dominio: No recibe parámetros de entrada.
 % Estrategia: Creación sin backtracking.
 
-% Crear una columna vacía de 6 elementos.
-columnaVacia([0, 0, 0, 0, 0, 0]).
-
-% Crear las 7 columnas.
-boardVacio(Board) :-
-    columnaVacia(Columna),
-    Board = [Columna, Columna, Columna, Columna, Columna, Columna, Columna].
-
-% Crear el tablero.
+% Función crear el tablero.
 board(board(Board)) :-
     boardVacio(Board).
+
+% Función auxiliar para crear las 6 filas.
+boardVacio(Board) :-
+    filaVacia(Fila),
+    Board = [Fila, Fila, Fila, Fila, Fila, Fila].
+    
+% Función auxiliar para crear una fila de 7 elementos.
+    filaVacia([0, 0, 0, 0, 0, 0, 0]).
 
 %---------------OTROS-BOARD---------------%
 
@@ -22,14 +40,45 @@ board(board(Board)) :-
 % Dominio: board(Board).
 % Estrategia: Verificación por recorrido de lista (fila superior; primera fila).
 
+% Función verificar si se puede jugar.
 can_play(Board) :-
-    % Ver la cabeza del board; o sea, la primera fila.
-    Board = board([primeraFila|_]),
-    member(0, primeraFila).
+    % Ver primera fila y buscar si hay espacio vacio.
+    getFirst(Board, PrimeraFila),
+    member(0, PrimeraFila).
 
+%-----------------------------------------%
 
-playPiece(board(Rows), Column, Piece, board(NewRows)) :-
-    % Verifica que la columna sea válida (entre 1 y 7)
-    Column >= 1, Column =< 7,
-    % Coloca la pieza y obtiene el nuevo tablero
-    place_in_column(Rows, Column, Piece, NewRows).
+%↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓  PENDIENTE  ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+
+% Descripcion: Predicado que permite jugar una ficha en el tablero.
+% Dominio: Board (board) X Column (int) X Piece (piece) X NewBoard (board).
+% Estrategia: *************
+
+% Función jugar la ficha.
+play_Piece(board(Filas), Columna, Piece, board(NuevasFilas)) :-
+    Columna >= 1, 
+    Columna =< 7,
+    ponerPiece(Filas, Columna, Piece, NuevasFilas).
+
+% Función auxiliar para poner la ficha en el board.
+ponerPiece(Filas, Columna, Piece, NuevasFilas) :-
+    encontrarEspacio(Board, Columna, Filas),
+    ...
+
+% Función auxiliar para encontrar en que fila de la columna especificada esta el primer 0.
+encontrarEspacio(Board, Columna, FilaPosicion) :-
+    encontrarEspacioAux(Board, Columna, 1, FilaPosicion).
+
+% Caso base.
+encontrarEspacioAux([], _, _, _) :-
+    !, fail.
+
+% Caso recursivo
+encontrarEspacioAux([FilaActual | RestoFilas], Columna, FilaIndex, FilaIndex) :-
+    get_element_at(Columna, FilaActual, 0).
+
+% Caso recursivo: Si no hay `0` en la fila actual, pasa a la siguiente fila.
+encontrarEspacioAux([_ | RestoFilas], Columna, ..., Fila) :-
+    ..........
+
+%↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑  PENDIENTE  ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
