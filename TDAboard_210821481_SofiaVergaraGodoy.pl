@@ -15,7 +15,7 @@ getElement(1, [Head | _], Head).
 getElement(Index, [_ | Tail], Element) :-
     Index > 1,
     NextIndex is Index - 1,
-    get_element_at(NextIndex, Tail, Element).
+    getElement(NextIndex, Tail, Element).
 
 %----------------------CONSTRUCTOR-BOARD----------------------%
 
@@ -73,7 +73,7 @@ encontrarEspacio(Board, Columna, FilaPosicion) :-
 
 % Caso Base.
 encontrarEspacioAux([FilaActual | RestoFilas], Columna, FilaIndex, FilaIndex) :-
-    get_element(FilaActual, Columna, 0).
+    getElement(FilaActual, Columna, 0).
 
 % Caso recursivo: Si no hay 0 en la fila actual, pasa a la siguiente fila.
 encontrarEspacioAux([_ | RestoFilas], Columna, FilaIndex, FilaPosicion) :-
