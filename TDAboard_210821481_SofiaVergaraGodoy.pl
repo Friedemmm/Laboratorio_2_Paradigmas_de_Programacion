@@ -2,18 +2,18 @@
 
 % loQueBusco(dondeLoBusco, comoLeLlamoALoQueBusco) %
 
-getFirst([First | _], First). 
-getSecond([_, Second | _], Second).
-getThird([_, _, Third | _], Third).
-getFourth([_, _, _, Fourth | _], Fourth).
-getFifth([_, _, _, _, Fifth | _], Fifth).
-getSixth([_, _, _, _, _, Sixth | _], Sixth).
-getSeventh([_, _, _, _, _, _, Seventh | _], Seventh).
+getFirst([First|_], First). 
+getSecond([_, Second|_], Second).
+getThird([_, _, Third|_], Third).
+getFourth([_, _, _, Fourth|_], Fourth).
+getFifth([_, _, _, _, Fifth|_], Fifth).
+getSixth([_, _, _, _, _, Sixth|_], Sixth).
+getSeventh([_, _, _, _, _, _, Seventh|_], Seventh).
 
 % Caso base.
-getElement(1, [Head | _], Head).
+getElement(1, [Head|_], Head).
 % Caso recursivo.
-getElement(Index, [_ | Tail], Element) :-
+getElement(Index, [_|Tail], Element) :-
     Index > 1,
     NextIndex is Index - 1,
     getElement(NextIndex, Tail, Element).
@@ -21,7 +21,7 @@ getElement(Index, [_ | Tail], Element) :-
 % Caso base.
 myLength([], 0).
 % Caso recursivo.
-myLength([_ | Cola], Largo) :-
+myLength([_|Cola], Largo) :-
     list_length(Cola, LargoCola),
     Largo is LargoCola + 1.
 
@@ -74,48 +74,76 @@ play_Piece(board(Filas), Columna, Piece, board(NuevasFilas)) :-
     ponerPiece(Filas, Columna, Piece, NuevasFilas).
 
 
-↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓      CAMBIAR      ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 % Predicado auxiliar para poner la ficha en el board.
-ponerPiece(Filas, Columna, Piece, NuevasFilas) :-
-    getColumna(Filas, ColAux, Columna),
-    encontrarEspacio(Board, Columna, Filas),
-    % Actualizar fila.
-    getElement(Filas, Pos, FilaAnt),
-    nuevaFila(FilaAnt, ColAux, Piece, FilaNueva),
-    nuevaFila(Filas, Pos, FilaNueva, FilasNuevas).
+ponerPiece([Fila, FilaSiguiente|Resto], Columna, Piece, [NuevaFila, FilaSiguiente|Resto]) :-
+    getElement(FilaSiguiente, Columna, 0),
+    getElement(Fila, Columna, 0),
+    actualizarFila(Fila, Columna, Piece, NuevaFila).
     
 
-% Predicado auxiliar para entrar en la columna.
-% Caso Base.
-get_column([], _, []).
-
-% Caso Recursivo.
-getColumna([Fila|Filas], ColAux, [Elemento|Resto]) :-
-    getElement(Fila, ColAux, Elemento),
-    getColumna(Filas, ColAux, Resto).
+% Predicador auxiliar para actualizar la fila seleccionada.
+actualizarFila(Fila, 1, Piece, [Piece|Resto]) :-
+    getSecond(Fila, Segundo),
+    getThird(Fila, Tercero),
+    getFourth(Fila, Cuarto),
+    getFifth(Fila, Quinto),
+    getSixth(Fila, Sexto),
+    getSeventh(Fila, Septimo),
+    Resto = [Segundo,Tercero,Cuarto,Quinto,Sexto,Septimo].
     
+actualizarFila(Fila, 2, Piece, [Primero,Piece|Resto]) :-
+    getFirst(Fila, Primero),
+    getThird(Fila, Tercero),
+    getFourth(Fila, Cuarto),
+    getFifth(Fila, Quinto),
+    getSixth(Fila, Sexto),
+    getSeventh(Fila, Septimo),
+    Resto = [Tercero,Cuarto,Quinto,Sexto,Septimo].
 
-% Predicado auxiliar para encontrar en que fila de la columna especificada esta el primer 0.
-encontrarEspacio(Board, Columna, FilaPosicion) :-
-    encontrarEspacioAux(Board, Columna, 1, FilaPosicion).
+actualizarFila(Fila, 3, Piece, [Primero,Segundo,Piece|Resto]) :-
+    getFirst(Fila, Primero),
+    getSecond(Fila, Segundo),
+    getFourth(Fila, Cuarto),
+    getFifth(Fila, Quinto),
+    getSixth(Fila, Sexto),
+    getSeventh(Fila, Septimo),
+    Resto = [Cuarto,Quinto,Sexto,Septimo].
 
-% Caso Base.
-encontrarEspacioAux([FilaActual | RestoFilas], Columna, FilaIndex, FilaIndex) :-
-    getElement(FilaActual, Columna, 0).
+actualizarFila(Fila, 4, Piece, [Primero,Segundo,Tercero,Piece|Resto]) :-
+    getFirst(Fila, Primero),
+    getSecond(Fila, Segundo),
+    getThird(Fila, Tercero),
+    getFifth(Fila, Quinto),
+    getSixth(Fila, Sexto),
+    getSeventh(Fila, Septimo),
+    Resto = [Quinto,Sexto,Septimo].
 
-% Caso recursivo.
-encontrarEspacioAux([_ | RestoFilas], Columna, FilaIndex, FilaPosicion) :-
-    NextIndex is FilaIndex + 1,
-    encontrarEspacioAux(RestoFilas, Columna, NextIndex, FilaPosicion).
-    
+actualizarFila(Fila, 5, Piece, [Primero,Segundo,Tercero,Cuarto,Piece|Resto]) :-
+    getFirst(Fila, Primero),
+    getSecond(Fila, Segundo),
+    getThird(Fila, Tercero),
+    getFourth(Fila, Cuarto),
+    getSixth(Fila, Sexto),
+    getSeventh(Fila, Septimo),
+    Resto = [Sexto,Septimo].
 
-% Predicado auxiliar para sobreescribir la elemento.
-nuevaFila(Lista, Pos, ElementoNuevo, NuevaLista) :-
-    myLength(Lista, Len),
-    Pos =< Len,
-    myLength(Inicio, Pos),
-    myAppend(Inicio, [_|Final], Lista),
-    myAppend(Inicio, [ElementoNuevo|Final], NuevaLista).
+actualizarFila(Fila, 6, Piece, [Primero,Segundo,Tercero,Cuarto,Quinto,Piece|Resto]) :-
+    getFirst(Fila, Primero),
+    getSecond(Fila, Segundo),
+    getThird(Fila, Tercero),
+    getFourth(Fila, Cuarto),
+    getFifth(Fila, Quinto),
+    getSeventh(Fila, Septimo),
+    Resto = [Septimo].
+
+actualizarFila(Fila, 7, Piece, [Primero,Segundo,Tercero,Cuarto,Quinto,Sexto,Piece]) :-
+    getFirst(Fila, Primero),
+    getSecond(Fila, Segundo),
+    getThird(Fila, Tercero),
+    getFourth(Fila, Cuarto),
+    getFifth(Fila, Quinto),
+    getSixth(Fila, Sexto).
+
 
 %-------------------------------------------------------------%
 
