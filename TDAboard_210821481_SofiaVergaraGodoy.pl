@@ -11,18 +11,24 @@ getSixth([_, _, _, _, _, Sixth|_], Sixth).
 getSeventh([_, _, _, _, _, _, Seventh|_], Seventh).
 
 % Caso base.
-getElement(1, [Head|_], Head).
+getElement(1, [Cab|_], Cab).
 % Caso recursivo.
-getElement(Index, [_|Tail], Element) :-
+getElement(Index, [_|Cola], Elemento) :-
     Index > 1,
     NextIndex is Index - 1,
-    getElement(NextIndex, Tail, Element).
+    getElement(NextIndex, Cola, Elemento).
+
+% Caso base.
+myMember(Elemento, [Elemento|_]).
+% Caso recursivo.
+myMember(Elemento, [_|Cola]) :-
+    mymember(Elemento, Cola).
 
 % Caso base.
 myLength([], 0).
 % Caso recursivo.
 myLength([_|Cola], Largo) :-
-    list_length(Cola, LargoCola),
+    myLength(Cola, LargoCola),
     Largo is LargoCola + 1.
 
 % Caso base.
@@ -59,7 +65,7 @@ boardVacio(Board) :-
 can_play(Board) :-
     % Ver primera fila y buscar si hay espacio vacio.
     getFirst(Board, PrimeraFila),
-    member(0, PrimeraFila).
+    myMember(0, PrimeraFila).
 
 %-------------------------------------------------------------%
 
