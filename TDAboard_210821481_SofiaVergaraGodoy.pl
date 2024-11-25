@@ -151,52 +151,63 @@ actualizarFila(Fila, 7, Piece, [Primero,Segundo,Tercero,Cuarto,Quinto,Sexto,Piec
 % Dominio: board (board) X int (1 si gana jugador 1, 2 si gana jugador 2, 0 si no hay ganador vertical).
 % Estrategia: 
 
-% Predicado para verificar las conidiciones de win.
+% Predicado para verificar las conidiciones de win vertical.
+% Caso Base.
+check_vertical_win(_, 0).
+% Caso Recursivo.
 check_vertical_win(board(Board), Winner) :-
-    Columnas = [1,2,3,4,5,6,7],
-    checkColumna(Board, Columnas, Winner).
+    myMember(Columna, [1,2,3,4,5,6,7]),
+    getColumnaElementos(Board, Columna, ListaColumna),
+    cuatroConsecutivos(ListaColumna, ColorWinner),
+    ColorWinner \= 0,
+    NumeroDeColor(ColorWinner, Winner), !. 
 
-↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓      CAMBIAR      ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
-% Predicado auxiliar para verificar cada columna.
+
+% Color es número del jugador.
+NumeroDeColor(red, 1).
+NumeroDeColor(yellow, 2).
+NumeroDeColor(0, 0).
+
+
+% Obtener los elementos de la columna.
 % Caso base.
-checkColumna(_, [], 0).
-
-% Caso recursivo; con ganador.
-checkColumna(Board, [Head|_], Winner) :-
-    getColumna(Board, Head, ColumnaRevisar),
-    checkConsecutivos(ColumnaRevisar, Winner),
-    Winner \= 0.
-    
-% Caso recursivo; sin ganador.
-checkColumna(Board, [Head|Cola], Winner) :-
-    getColumna(Board, Head, ColumnaRevisar),
-    checkConsecutivos(ColumnaRevisar, 0),
-    checkColumna(Board, Cola, Winner).
-
-
-% Predicado para ver si hay 4 consecutivos.
-% Caso base.
-checkConsecutivos([], 0).
-
-% Caso base; no hay tantas piezas puestas.
-checkConsecutivos(List, 0) :-
-    myLength(List, Len),
-    Len < 4.
-
-% Caso base; no hay ganador.
-checkConsecutivos([_ | Cola], Winner) :-
-    checkConsecutivos(Cola, Winner).
-    
+getColumnaElementos([], _, []).
 % Caso recursivo.
-checkConsecutivos([P1, P2, P3, P4 | _], Winner) :-
-    P1 \= 0,  % No considerar espacios vacíos
+getColumnaElementos([Fila|Resto], Columna, [Valor|ValoresAdd]) :-
+    getValorColumnaEnFila(Fila, Columna, Valor),
+    getColumnaElementos(Resto, Columna, ValoresAdd).
+
+
+% Obtener valor de la posición de la columna en la fila.
+getValorColumnaEnFila(Fila, 1, Valor) :-
+    getFirst(Fila, Valor).
+getValorColumnaEnFila(Fila, 2, Valor) :-
+    getSecond(Fila, Valor).
+getValorColumnaEnFila(Fila, 3, Valor) :-
+    getThird(Fila, Valor).
+getValorColumnaEnFila(Fila, 4, Valor) :-
+    getFourth(Fila, Valor).
+getValorColumnaEnFila(Fila, 5, Valor) :-
+    getFifth(Fila, Valor).
+getValorColumnaEnFila(Fila, 6, Valor) :-
+    getSixth(Fila, Valor).
+getValorColumnaEnFila(Fila, 7, Valor) :-
+    getSeventh(Fila, Valor).
+
+
+% Verificar 4 fichas consecutivas.
+% Caso base.
+cuatroConsecutivos(Column, 0) :-
+    myLength(Columna, Largo),
+    Largo < 4.
+% Caso recursivo: verificar 4 consecutivos del mismo color.
+cuatroConsecutivos([P1,P2,P3,P4|_], P1) :-
+    P1 \= 0,
     P1 = P2,
     P2 = P3,
-    P3 = P4,
-    Winner = P1.  % El ganador es el número del jugador (1 o 2).
-
-
-
-
+    P3 = P4.
+% Caso recursivo: verificar resto de la columna.
+cuatroConsecutivos([_|Resto], Winner) :-
+    cuatroConsecutivos(Resto, Winner).
 
 
