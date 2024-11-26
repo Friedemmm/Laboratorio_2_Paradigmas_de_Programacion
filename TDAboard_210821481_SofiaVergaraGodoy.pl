@@ -37,11 +37,12 @@ myAppend([], L, L).
 myAppend([Cab|Cola], L2, [Cab|Resultado]) :-
     myAppend(Cola, L2, Resultado).
 
-%----------------------CONSTRUCTOR-BOARD----------------------%
+%-----------------RF-04-CONSTRUCTOR-BOARD---------------------%
 
 % Descripcion:  Predicado para crear un tablero de Conecta4.
 % Dominio: No recibe parámetros de entrada.
-% Estrategia: Creación sin backtracking.
+% Meta Principal: board/1.
+% Meta Secundaria: boardVacio/1, filaVacia/1.
 
 % Predicado crear el tablero.
 board(board(Board)) :-
@@ -55,11 +56,12 @@ boardVacio(Board) :-
 % Predicado auxiliar para crear una fila de 7 elementos.
     filaVacia([0, 0, 0, 0, 0, 0, 0]).
 
-%-------------------------OTROS-BOARD-------------------------%
+%----------------------------RF-05----------------------------%
 
 % Descripcion: Predicado que permite verificar si se puede realizar más jugadas en el tablero.
 % Dominio: board(Board).
-% Estrategia: Verificación por recorrido de lista (fila superior; primera fila).
+% Meta Principal: can_play/1.
+% Meta Secundaria: getFirst/2, myMember/2.
 
 % Predicado verificar si se puede jugar.
 can_play(Board) :-
@@ -67,11 +69,12 @@ can_play(Board) :-
     getFirst(Board, PrimeraFila),
     myMember(0, PrimeraFila).
 
-%-------------------------------------------------------------%
+%----------------------------RF-06----------------------------%
 
 % Descripcion: Predicado que permite jugar una ficha en el tablero.
 % Dominio: Board (board) X Column (int) X Piece (piece) X NewBoard (board).
-% Estrategia: *************
+% Meta Principal: play_Piece/4.
+% Meta Secundaria: ponerPiece/4, actualizarFila/4, getElement/3, get***/2 (cualquier get de posición).
 
 % Predicado jugar la ficha.
 play_Piece(board(Filas), Columna, Piece, board(NuevasFilas)) :-
@@ -151,13 +154,14 @@ actualizarFila(Fila, 7, Piece, [Primero,Segundo,Tercero,Cuarto,Quinto,Sexto,Piec
     getSixth(Fila, Sexto).
 
 
-%-------------------------------------------------------------%
+%----------------------------RF-07----------------------------%
 
 % Descripcion: Predicado que permite verificar ganador que conecta 4 fichas de forma vertical.
 % Dominio: board (board) X int (1 si gana jugador 1, 2 si gana jugador 2, 0 si no hay ganador vertical).
-% Estrategia: 
+% Meta Principal: check_vertical_win/1.
+% Meta Secundaria: myMember/2, getColumnaElementos/3, cuatroConsecutivos/2, NumeroDeColor/2.
 
-% Predicado para verificar las conidiciones de win vertical.
+% Predicado para verificar las condiciones de win vertical.
 % Caso Base.
 check_vertical_win(_, 0).
 % Caso Recursivo.
@@ -215,5 +219,56 @@ cuatroConsecutivos([P1,P2,P3,P4|_], P1) :-
 % Caso recursivo: verificar resto de la columna.
 cuatroConsecutivos([_|Resto], Winner) :-
     cuatroConsecutivos(Resto, Winner).
+
+%----------------------------RF-08----------------------------%
+
+% Descripcion: Predicado que permite verificar ganador que conecta 4 fichas de forma horizontal.
+% Dominio: board (board) X int (1 si gana jugador 1, 2 si gana jugador 2, 0 si no hay ganador horizontal).
+% Meta Principal: check_horizontal_win/1.
+% Meta Secundaria: myMember/2, cuatroConsecutivos/2, NumeroDeColor/2.
+
+% Predicado para verificar las condiciones de win horizontal.
+% Caso Base.
+check_horizontal_win(_, 0).
+% Caso Recursivo.
+check_horizontal_win(board(Board), Winner) :-
+    myMember(Fila, Board),
+    cuatroConsecutivosHorizontal(Fila, ColorWinner),
+    ColorWinner \= 0,
+    NumeroDeColor(ColorWinner, Winner), !.
+
+
+% Verificar 4 fichas consecutivas en una fila
+% Caso base.
+cuatroConsecutivosHorizontal(Fila, 0) :-
+    myLength(Fila, Largo),
+    Largo < 4.
+% Caso recursivo: verificar 4 consecutivos del mismo color.
+cuatroConsecutivosHorizontal([P1,P2,P3,P4|_], P1) :-
+    P1 \= 0,
+    P1 = P2,
+    P2 = P3,
+    P3 = P4.
+% Caso recursivo: verificar resto de la fila.
+cuatroConsecutivosHorizontal([_|Resto], Winner) :-
+    cuatroConsecutivosHorizontal(Resto, Winner).
+
+%----------------------------RF-08----------------------------%
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
