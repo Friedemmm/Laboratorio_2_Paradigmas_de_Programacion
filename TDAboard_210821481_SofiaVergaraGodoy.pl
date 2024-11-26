@@ -159,7 +159,7 @@ actualizarFila(Fila, 7, Piece, [Primero,Segundo,Tercero,Cuarto,Quinto,Sexto,Piec
 % Descripcion: Predicado que permite verificar ganador que conecta 4 fichas de forma vertical.
 % Dominio: board (board) X int (1 si gana jugador 1, 2 si gana jugador 2, 0 si no hay ganador vertical).
 % Meta Principal: check_vertical_win/1.
-% Meta Secundaria: myMember/2, getColumnaElementos/3, cuatroConsecutivos/2, NumeroDeColor/2.
+% Meta Secundaria: myMember/2, getColumnaElementos/3, cuatroConsecutivos/2, idColor/2.
 
 % Predicado para verificar las condiciones de win vertical.
 % Caso Base.
@@ -170,13 +170,12 @@ check_vertical_win(board(Board), Winner) :-
     getColumnaElementos(Board, Columna, ListaColumna),
     cuatroConsecutivos(ListaColumna, ColorWinner),
     ColorWinner \= 0,
-    NumeroDeColor(ColorWinner, Winner), !. 
+    idColor(ColorWinner, Winner), !. 
 
 
-% Color es número del jugador.
-NumeroDeColor(red, 1).
-NumeroDeColor(yellow, 2).
-NumeroDeColor(0, 0).
+% Predicado para obtener el ID del jugador según su color
+idColor(ColorWinner, WinnerID) :-
+    getPlayer(WinnerID, _, ColorWinner, _, _, _, _).
 
 
 % Obtener los elementos de la columna.
@@ -225,7 +224,7 @@ cuatroConsecutivos([_|Resto], Winner) :-
 % Descripcion: Predicado que permite verificar ganador que conecta 4 fichas de forma horizontal.
 % Dominio: board (board) X int (1 si gana jugador 1, 2 si gana jugador 2, 0 si no hay ganador horizontal).
 % Meta Principal: check_horizontal_win/1.
-% Meta Secundaria: myMember/2, cuatroConsecutivos/2, NumeroDeColor/2.
+% Meta Secundaria: myMember/2, cuatroConsecutivos/2, idColor/2.
 
 % Predicado para verificar las condiciones de win horizontal.
 % Caso Base.
@@ -235,7 +234,7 @@ check_horizontal_win(board(Board), Winner) :-
     myMember(Fila, Board),
     cuatroConsecutivosHorizontal(Fila, ColorWinner),
     ColorWinner \= 0,
-    NumeroDeColor(ColorWinner, Winner), !.
+    idColor(ColorWinner, Winner), !. 
 
 
 % Verificar 4 fichas consecutivas en una fila
