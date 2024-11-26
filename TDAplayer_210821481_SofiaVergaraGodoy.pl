@@ -1,4 +1,9 @@
-%---------------CONSTRUCTOR-PLAYER---------------%
+%---------------------SELECTORES-PLAYER-----------------------%
+
+getPlayer(ID, Name, Color, Wins, Losses, Draws, RemainingPieces) :-
+    player(ID, Name, Color, Wins, Losses, Draws, RemainingPieces, _).
+
+%--------------------CONSTRUCTOR-PLAYER-----------------------%
 
 % Descripcion: Predicado que permite crear un jugador.
 % Dominio: id (int) X name (string) X color (string) X wins (int) X
