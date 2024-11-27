@@ -22,7 +22,7 @@ getElement(Index, [_|Cola], Elemento) :-
 myMember(Elemento, [Elemento|_]).
 % Caso recursivo.
 myMember(Elemento, [_|Cola]) :-
-    mymember(Elemento, Cola).
+    myMember(Elemento, Cola).
 
 % Caso base.
 myLength([], 0).
@@ -80,6 +80,7 @@ can_play(Board) :-
 play_Piece(board(Filas), Columna, Piece, board(NuevasFilas)) :-
     Columna >= 1, 
     Columna =< 7,
+    getColor (Color, Piece),
     ponerPiece(Filas, Columna, Piece, NuevasFilas).
 
 
@@ -206,7 +207,7 @@ getValorColumnaEnFila(Fila, 7, Valor) :-
 
 % Verificar 4 fichas consecutivas.
 % Caso base.
-cuatroConsecutivos(Column, 0) :-
+cuatroConsecutivos(Columna, 0) :-
     myLength(Columna, Largo),
     Largo < 4.
 % Caso recursivo: verificar 4 consecutivos del mismo color.
@@ -252,10 +253,12 @@ cuatroConsecutivosHorizontal([P1,P2,P3,P4|_], P1) :-
 cuatroConsecutivosHorizontal([_|Resto], Winner) :-
     cuatroConsecutivosHorizontal(Resto, Winner).
 
-%----------------------------RF-08----------------------------%
+%----------------------------RF-09----------------------------%
 
-
-
+% Descripcion: Predicado que permite verificar ganador que conecta 4 fichas de forma diagonal.
+% Dominio: board (board) X int (1 si gana jugador 1, 2 si gana jugador 2, 0 si no hay ganador diagonal).
+% Meta Principal: check_diagonal_win/1.
+% Meta Secundaria: ...
 
 
 
