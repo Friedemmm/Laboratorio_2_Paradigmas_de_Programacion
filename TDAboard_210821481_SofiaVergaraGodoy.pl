@@ -76,84 +76,40 @@ can_play(Board) :-
 % Meta Principal: play_Piece/4.
 % Meta Secundaria: ponerPiece/4, actualizarFila/4, getElement/3, get***/2 (cualquier get de posición).
 
-% Predicado jugar la ficha.
-play_Piece(board(Filas), Columna, Piece, board(NuevasFilas)) :-
-    Columna >= 1, 
+% Descripcion: Predicado que permite jugar una ficha en el tablero.
+% Dominio: Board (board) X Column (int) X Piece (piece) X NewBoard (board).
+% Meta Principal: play_Piece/4.
+% Meta Secundaria: getColor/2, myReverse/2, ponerPiece/4.
+
+% Predicado principal para colocar la pieza
+play_piece(Board, Columna, Piece, NewBoard) :-
+    Columna >= 1,
     Columna =< 7,
-    getColor (Color, Piece),
-    ponerPiece(Filas, Columna, Piece, NuevasFilas).
+    getColor(Color, Piece),
+    myReverse(Board, BoardInvertido),
+    ponerPiece(BoardInvertido, Columna, Color, NewBoardInvertido),
+    myReverse(NewBoardInvertido, NewBoard).
 
+% Predicado auxiliar para colocar la pieza.
+ponerPiece([Fila|Resto], Columna, Color, [NuevaFila|Resto]) :-
+    getValorColumnaEnFila(Fila, Columna, 0), % Verifica que la columna está vacía
+    actualizarFila(Fila, Columna, Color, NuevaFila), !.
 
-% Predicado auxiliar para poner la ficha en el board.
-ponerPiece([Fila, FilaSiguiente|Resto], Columna, Piece, [NuevaFila, FilaSiguiente|Resto]) :-
-    getElement(FilaSiguiente, Columna, 0),
-    getElement(Fila, Columna, 0),
-    actualizarFila(Fila, Columna, Piece, NuevaFila).
-    
+ponerPiece([Fila|Resto], Columna, Color, [Fila|NuevoResto]) :-
+    ponerPiece(Resto, Columna, Color, NuevoResto).
 
-% Predicador auxiliar para actualizar la fila seleccionada.
-actualizarFila(Fila, 1, Piece, [Piece|Resto]) :-
-    getSecond(Fila, Segundo),
-    getThird(Fila, Tercero),
-    getFourth(Fila, Cuarto),
-    getFifth(Fila, Quinto),
-    getSixth(Fila, Sexto),
-    getSeventh(Fila, Septimo),
-    Resto = [Segundo,Tercero,Cuarto,Quinto,Sexto,Septimo].
-    
-actualizarFila(Fila, 2, Piece, [Primero,Piece|Resto]) :-
-    getFirst(Fila, Primero),
-    getThird(Fila, Tercero),
-    getFourth(Fila, Cuarto),
-    getFifth(Fila, Quinto),
-    getSixth(Fila, Sexto),
-    getSeventh(Fila, Septimo),
-    Resto = [Tercero,Cuarto,Quinto,Sexto,Septimo].
+% Predicado auxiliar para actualizar la fila.
+% Caso Base.
+actualizarFila([_|Resto], 1, Color, [Color|Resto]).
+% Caso Recursivo.
+actualizarFila([Cabeza|Resto], Columna, Color, [Cabeza|NuevaFila]) :-
+    Columna > 1,
+    Columna1 is Columna - 1,
+    actualizarFila(Resto, Columna1, Color, NuevaFila).
 
-actualizarFila(Fila, 3, Piece, [Primero,Segundo,Piece|Resto]) :-
-    getFirst(Fila, Primero),
-    getSecond(Fila, Segundo),
-    getFourth(Fila, Cuarto),
-    getFifth(Fila, Quinto),
-    getSixth(Fila, Sexto),
-    getSeventh(Fila, Septimo),
-    Resto = [Cuarto,Quinto,Sexto,Septimo].
-
-actualizarFila(Fila, 4, Piece, [Primero,Segundo,Tercero,Piece|Resto]) :-
-    getFirst(Fila, Primero),
-    getSecond(Fila, Segundo),
-    getThird(Fila, Tercero),
-    getFifth(Fila, Quinto),
-    getSixth(Fila, Sexto),
-    getSeventh(Fila, Septimo),
-    Resto = [Quinto,Sexto,Septimo].
-
-actualizarFila(Fila, 5, Piece, [Primero,Segundo,Tercero,Cuarto,Piece|Resto]) :-
-    getFirst(Fila, Primero),
-    getSecond(Fila, Segundo),
-    getThird(Fila, Tercero),
-    getFourth(Fila, Cuarto),
-    getSixth(Fila, Sexto),
-    getSeventh(Fila, Septimo),
-    Resto = [Sexto,Septimo].
-
-actualizarFila(Fila, 6, Piece, [Primero,Segundo,Tercero,Cuarto,Quinto,Piece|Resto]) :-
-    getFirst(Fila, Primero),
-    getSecond(Fila, Segundo),
-    getThird(Fila, Tercero),
-    getFourth(Fila, Cuarto),
-    getFifth(Fila, Quinto),
-    getSeventh(Fila, Septimo),
-    Resto = [Septimo].
-
-actualizarFila(Fila, 7, Piece, [Primero,Segundo,Tercero,Cuarto,Quinto,Sexto,Piece]) :-
-    getFirst(Fila, Primero),
-    getSecond(Fila, Segundo),
-    getThird(Fila, Tercero),
-    getFourth(Fila, Cuarto),
-    getFifth(Fila, Quinto),
-    getSixth(Fila, Sexto).
-
+% Obtener el valor del elemento en columna x fila.
+getValorColumnaEnFila(Fila, Columna, Valor) :-
+    enesimoElemento(Fila, Columna, Valor).
 
 %----------------------------RF-07----------------------------%
 
