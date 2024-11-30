@@ -1,9 +1,9 @@
 %---------------------SELECTORES-PIECE-----------------------%
 
-getColor(Color, Piece) :-
+getColorPieza(Color, Piece) :-
     piece(Color, Piece).
 
-%--------------------CONSTRUCTOR-PIECE-----------------------%
+%-----------------RF-03-CONSTRUCTOR-PIECE---------------------%
 
 % Descripcion: Predicado que crea una ficha de Conecta4.
 % Dominio: color (string).
